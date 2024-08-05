@@ -25,12 +25,13 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        h1 {
+        h1, h2 {
             color: #2c3e50;
             text-align: center;
             margin-bottom: 30px;
-            font-size: 2.5em;
         }
+        h1 { font-size: 2.5em; }
+        h2 { font-size: 2em; }
         form {
             display: flex;
             flex-direction: column;
@@ -40,7 +41,7 @@
             font-weight: bold;
             color: #34495e;
         }
-        input, textarea, select {
+        input, textarea {
             margin-bottom: 15px;
             padding: 12px;
             border: 1px solid #bdc3c7;
@@ -48,7 +49,7 @@
             font-size: 16px;
             transition: border-color 0.3s ease;
         }
-        input:focus, textarea:focus, select:focus {
+        input:focus, textarea:focus {
             outline: none;
             border-color: #3498db;
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
@@ -76,17 +77,6 @@
             border-top: 2px solid #ecf0f1;
             padding-top: 30px;
         }
-        #preview h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-        #preview h3 {
-            color: #34495e;
-            margin-bottom: 15px;
-        }
-        #preview p {
-            margin-bottom: 15px;
-        }
         .fade-in {
             animation: fadeIn 0.5s ease-in;
         }
@@ -94,9 +84,15 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .financial-inputs {
+        .financial-section {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .financial-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
         }
         @media (max-width: 768px) {
@@ -104,10 +100,9 @@
                 margin: 20px;
                 padding: 20px;
             }
-            h1 {
-                font-size: 2em;
-            }
-            .financial-inputs {
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.8em; }
+            .financial-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -130,7 +125,7 @@
                 projectedRevenue: '',
                 operatingCosts: '',
                 breakEvenPoint: '',
-                fundingNeeds: '',
+                fundingNeeds: ''
             });
 
             const [showPreview, setShowPreview] = useState(false);
@@ -232,50 +227,54 @@ ${formData.competitiveAdvantage}
                         placeholder: '描述您的競爭優勢',
                         required: true
                     }),
-                    React.createElement('label', null, '六、財務預測'),
                     React.createElement(
                         'div',
-                        { className: 'financial-inputs' },
-                        React.createElement('input', {
-                            type: 'text',
-                            name: 'initialInvestment',
-                            value: formData.initialInvestment,
-                            onChange: handleChange,
-                            placeholder: '初始投資',
-                            required: true
-                        }),
-                        React.createElement('input', {
-                            type: 'text',
-                            name: 'projectedRevenue',
-                            value: formData.projectedRevenue,
-                            onChange: handleChange,
-                            placeholder: '預計收入',
-                            required: true
-                        }),
-                        React.createElement('input', {
-                            type: 'text',
-                            name: 'operatingCosts',
-                            value: formData.operatingCosts,
-                            onChange: handleChange,
-                            placeholder: '營運成本',
-                            required: true
-                        }),
-                        React.createElement('input', {
-                            type: 'text',
-                            name: 'breakEvenPoint',
-                            value: formData.breakEvenPoint,
-                            onChange: handleChange,
-                            placeholder: '損益平衡點',
-                            required: true
-                        }),
-                        React.createElement('input', {
-                            type: 'text',
-                            name: 'fundingNeeds',
-                            value: formData.fundingNeeds,
-                            onChange: handleChange,
-                            placeholder: '資金需求',
-                            required: true
-                        })
+                        { className: 'financial-section' },
+                        React.createElement('h2', null, '六、財務預測'),
+                        React.createElement(
+                            'div',
+                            { className: 'financial-grid' },
+                            React.createElement('input', {
+                                type: 'text',
+                                name: 'initialInvestment',
+                                value: formData.initialInvestment,
+                                onChange: handleChange,
+                                placeholder: '初始投資',
+                                required: true
+                            }),
+                            React.createElement('input', {
+                                type: 'text',
+                                name: 'projectedRevenue',
+                                value: formData.projectedRevenue,
+                                onChange: handleChange,
+                                placeholder: '預計收入',
+                                required: true
+                            }),
+                            React.createElement('input', {
+                                type: 'text',
+                                name: 'operatingCosts',
+                                value: formData.operatingCosts,
+                                onChange: handleChange,
+                                placeholder: '營運成本',
+                                required: true
+                            }),
+                            React.createElement('input', {
+                                type: 'text',
+                                name: 'breakEvenPoint',
+                                value: formData.breakEvenPoint,
+                                onChange: handleChange,
+                                placeholder: '損益平衡點',
+                                required: true
+                            }),
+                            React.createElement('input', {
+                                type: 'text',
+                                name: 'fundingNeeds',
+                                value: formData.fundingNeeds,
+                                onChange: handleChange,
+                                placeholder: '資金需求',
+                                required: true
+                            })
+                        )
                     ),
                     React.createElement('button', { type: 'submit' }, '產生並下載計劃書'),
                     React.createElement(
@@ -296,7 +295,7 @@ ${formData.competitiveAdvantage}
                     React.createElement('p', null, React.createElement('strong', null, '三、產品/服務描述：'), ' ', formData.productDescription),
                     React.createElement('p', null, React.createElement('strong', null, '四、目標市場：'), ' ', formData.targetMarket),
                     React.createElement('p', null, React.createElement('strong', null, '五、競爭優勢：'), ' ', formData.competitiveAdvantage),
-                    React.createElement('p', null, React.createElement('strong', null, '六、財務預測：')),
+                    React.createElement('h3', null, '六、財務預測：'),
                     React.createElement('p', null, '初始投資：', formData.initialInvestment),
                     React.createElement('p', null, '預計收入：', formData.projectedRevenue),
                     React.createElement('p', null, '營運成本：', formData.operatingCosts),
