@@ -6,61 +6,93 @@
     <title>創業計畫書生成器</title>
     <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://unpkg.com/jspdf-unicode/dist/jspdf-unicode.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Noto Sans TC', sans-serif;
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
         }
         .container {
             max-width: 800px;
-            margin: auto;
+            margin: 40px auto;
             background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         h1 {
-            color: #333;
+            color: #2c3e50;
             text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
         }
         form {
             display: flex;
             flex-direction: column;
         }
         label {
-            margin-top: 10px;
+            margin-top: 20px;
             font-weight: bold;
+            color: #34495e;
         }
         input, textarea {
-            margin-bottom: 10px;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            margin-bottom: 15px;
+            padding: 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
         }
         textarea {
-            height: 100px;
+            height: 120px;
+            resize: vertical;
         }
         button {
-            background-color: #4CAF50;
+            background-color: #3498db;
             color: white;
-            padding: 10px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #2980b9;
         }
         #preview {
-            margin-top: 20px;
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
+            margin-top: 40px;
+            border-top: 2px solid #ecf0f1;
+            padding-top: 30px;
+        }
+        #preview h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        #preview h3 {
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+        #preview p {
+            margin-bottom: 15px;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -96,48 +128,6 @@
                 alert('計畫書已保存！');
             };
 
-            const generatePDF = async () => {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-
-                const Unicode = await window.UnicodeModule;
-                await Unicode(doc);
-
-                doc.setFont('NotoSansTC', 'normal');
-                
-                doc.setFontSize(18);
-                doc.text('創業計畫書', 105, 20, { align: 'center' });
-                
-                doc.setFontSize(12);
-                const sections = [
-                    { title: '一、公司名稱', content: formData.companyName },
-                    { title: '二、公司使命', content: formData.mission },
-                    { title: '三、產品/服務描述', content: formData.productDescription },
-                    { title: '四、目標市場', content: formData.targetMarket },
-                    { title: '五、競爭優勢', content: formData.competitiveAdvantage },
-                    { title: '六、財務預測', content: formData.financialProjections }
-                ];
-
-                let yPosition = 40;
-                sections.forEach(section => {
-                    doc.setFontSize(12);
-                    doc.text(section.title, 20, yPosition);
-                    yPosition += 10;
-                    
-                    doc.setFontSize(10);
-                    const contentLines = doc.splitTextToSize(section.content, 170);
-                    doc.text(contentLines, 20, yPosition);
-                    yPosition += contentLines.length * 7 + 10;
-
-                    if (yPosition > 280) {
-                        doc.addPage();
-                        yPosition = 20;
-                    }
-                });
-                
-                doc.save('startup_plan.pdf');
-            };
-
             return React.createElement(
                 'div',
                 { className: 'container' },
@@ -145,53 +135,59 @@
                 React.createElement(
                     'form',
                     { onSubmit: handleSubmit },
-                    React.createElement('label', { htmlFor: 'companyName' }, '一、公司名稱：'),
+                    React.createElement('label', { htmlFor: 'companyName' }, '一、公司名稱'),
                     React.createElement('input', {
                         type: 'text',
                         id: 'companyName',
                         name: 'companyName',
                         value: formData.companyName,
                         onChange: handleChange,
+                        placeholder: '輸入您的公司名稱',
                         required: true
                     }),
-                    React.createElement('label', { htmlFor: 'mission' }, '二、公司使命：'),
+                    React.createElement('label', { htmlFor: 'mission' }, '二、公司使命'),
                     React.createElement('textarea', {
                         id: 'mission',
                         name: 'mission',
                         value: formData.mission,
                         onChange: handleChange,
+                        placeholder: '描述您公司的使命',
                         required: true
                     }),
-                    React.createElement('label', { htmlFor: 'productDescription' }, '三、產品/服務描述：'),
+                    React.createElement('label', { htmlFor: 'productDescription' }, '三、產品/服務描述'),
                     React.createElement('textarea', {
                         id: 'productDescription',
                         name: 'productDescription',
                         value: formData.productDescription,
                         onChange: handleChange,
+                        placeholder: '描述您的產品或服務',
                         required: true
                     }),
-                    React.createElement('label', { htmlFor: 'targetMarket' }, '四、目標市場：'),
+                    React.createElement('label', { htmlFor: 'targetMarket' }, '四、目標市場'),
                     React.createElement('textarea', {
                         id: 'targetMarket',
                         name: 'targetMarket',
                         value: formData.targetMarket,
                         onChange: handleChange,
+                        placeholder: '描述您的目標市場',
                         required: true
                     }),
-                    React.createElement('label', { htmlFor: 'competitiveAdvantage' }, '五、競爭優勢：'),
+                    React.createElement('label', { htmlFor: 'competitiveAdvantage' }, '五、競爭優勢'),
                     React.createElement('textarea', {
                         id: 'competitiveAdvantage',
                         name: 'competitiveAdvantage',
                         value: formData.competitiveAdvantage,
                         onChange: handleChange,
+                        placeholder: '描述您的競爭優勢',
                         required: true
                     }),
-                    React.createElement('label', { htmlFor: 'financialProjections' }, '六、財務預測：'),
+                    React.createElement('label', { htmlFor: 'financialProjections' }, '六、財務預測'),
                     React.createElement('textarea', {
                         id: 'financialProjections',
                         name: 'financialProjections',
                         value: formData.financialProjections,
                         onChange: handleChange,
+                        placeholder: '描述您的財務預測',
                         required: true
                     }),
                     React.createElement('button', { type: 'submit' }, '保存計畫書'),
@@ -202,12 +198,11 @@
                             onClick: () => setShowPreview(!showPreview)
                         },
                         showPreview ? '隱藏預覽' : '顯示預覽'
-                    ),
-                    React.createElement('button', { type: 'button', onClick: generatePDF }, '匯出 PDF')
+                    )
                 ),
                 showPreview && React.createElement(
                     'div',
-                    { id: 'preview' },
+                    { id: 'preview', className: 'fade-in' },
                     React.createElement('h2', null, '預覽'),
                     React.createElement('h3', null, '一、公司名稱：', formData.companyName),
                     React.createElement('p', null, React.createElement('strong', null, '二、公司使命：'), ' ', formData.mission),
