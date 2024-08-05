@@ -4,11 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>創業計劃書模擬器</title>
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
     <style>
-        /* 保留原有的樣式 */
-        /* ... */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --background-color: #f0f4f8;
+            --text-color: #333;
+            --border-color: #bdc3c7;
+            --hover-color: #2980b9;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        h1 { font-size: 2.2em; margin-bottom: 30px; }
+        h2 { font-size: 1.8em; margin-bottom: 20px; }
+        h3 { font-size: 1.4em; margin-bottom: 15px; }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 20px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            font-size: 1.1em;
+        }
+
+        input, textarea {
+            margin-bottom: 15px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--hover-color);
+        }
+
+        #preview {
+            margin-top: 40px;
+            border-top: 2px solid var(--border-color);
+            padding-top: 30px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
         .financial-section {
             background-color: #ecf0f1;
@@ -35,261 +131,186 @@
             margin-top: 10px;
         }
 
-        /* 在小屏幕上調整佈局 */
+        .preview-section {
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .preview-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .preview-content {
+            margin-left: 20px;
+        }
+
         @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
             .financial-grid {
                 grid-template-columns: 1fr;
             }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.6em; }
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="container">
+        <h1>創業計劃書模擬器</h1>
+        <form id="startup-form">
+            <label for="companyName">一、公司名稱</label>
+            <input type="text" id="companyName" name="companyName" placeholder="輸入您的公司名稱" required>
+            
+            <label for="mission">二、公司使命</label>
+            <textarea id="mission" name="mission" placeholder="描述您公司的使命" required></textarea>
+            
+            <label for="productDescription">三、產品/服務描述</label>
+            <textarea id="productDescription" name="productDescription" placeholder="描述您的產品或服務" required></textarea>
+            
+            <label for="targetMarket">四、目標市場</label>
+            <textarea id="targetMarket" name="targetMarket" placeholder="描述您的目標市場" required></textarea>
+            
+            <label for="competitiveAdvantage">五、競爭優勢</label>
+            <textarea id="competitiveAdvantage" name="competitiveAdvantage" placeholder="描述您的競爭優勢" required></textarea>
+            
+            <div class="financial-section">
+                <h2>六、財務預測</h2>
+                
+                <div class="financial-subsection">
+                    <h3>初始投資與成本</h3>
+                    <div class="financial-grid">
+                        <input type="number" name="initialInvestment" placeholder="初始投資總額" required>
+                        <input type="number" name="monthlyFixedCosts" placeholder="月固定成本" required>
+                        <input type="number" name="monthlyVariableCosts" placeholder="月變動成本" required>
+                    </div>
+                    <div class="financial-note">
+                        請仔細評估所有可能的成本，包括租金、薪資、原材料等。
+                    </div>
+                </div>
 
-    <script type="text/javascript">
-        const { useState } = React;
+                <div class="financial-subsection">
+                    <h3>收入預測</h3>
+                    <div class="financial-grid">
+                        <input type="number" name="expectedUnitPrice" placeholder="預期單價" required>
+                        <input type="number" name="expectedMonthlySales" placeholder="預期月銷量" required>
+                        <input type="number" name="projectedAnnualRevenue" placeholder="預計年收入" required>
+                    </div>
+                    <div class="financial-note">
+                        基於市場研究和競爭分析來估算這些數字。考慮季節性因素和市場趨勢。
+                    </div>
+                </div>
 
-        function StartupPlanForm() {
-            const [formData, setFormData] = useState({
-                companyName: '',
-                mission: '',
-                productDescription: '',
-                targetMarket: '',
-                competitiveAdvantage: '',
-                initialInvestment: '',
-                monthlyFixedCosts: '',
-                monthlyVariableCosts: '',
-                expectedUnitPrice: '',
-                expectedMonthlySales: '',
-                breakevenPoint: '',
-                projectedAnnualRevenue: '',
-                projectedAnnualProfit: '',
-                paybackPeriod: '',
-                fundingNeeds: '',
-                returnOnInvestment: '',
-                cashFlowProjection: '',
-                riskAssessment: ''
+                <div class="financial-subsection">
+                    <h3>盈利能力分析</h3>
+                    <div class="financial-grid">
+                        <input type="number" name="breakevenPoint" placeholder="損益平衡點（單位）" required>
+                        <input type="number" name="projectedAnnualProfit" placeholder="預計年利潤" required>
+                        <input type="number" name="paybackPeriod" placeholder="預期回收期（月）" required>
+                        <input type="number" name="returnOnInvestment" placeholder="投資回報率（%）" required>
+                    </div>
+                    <div class="financial-note">
+                        計算這些指標以評估您的業務在財務上的可行性。
+                    </div>
+                </div>
+
+                <div class="financial-subsection">
+                    <h3>資金需求與現金流</h3>
+                    <div class="financial-grid">
+                        <input type="number" name="fundingNeeds" placeholder="資金需求" required>
+                        <textarea name="cashFlowProjection" placeholder="現金流預測（概述首年每月現金流）" required></textarea>
+                    </div>
+                    <div class="financial-note">
+                        詳細規劃您的資金來源和使用，以及預期的現金流入和流出。
+                    </div>
+                </div>
+
+                <div class="financial-subsection">
+                    <h3>風險評估</h3>
+                    <textarea name="riskAssessment" placeholder="列出潛在的財務風險和緩解策略" required></textarea>
+                    <div class="financial-note">
+                        識別可能影響財務表現的風險，並提出相應的應對策略。
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" id="preview-btn">顯示預覽</button>
+        </form>
+
+        <div id="preview" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('startup-form');
+            const previewBtn = document.getElementById('preview-btn');
+            const previewDiv = document.getElementById('preview');
+
+            previewBtn.addEventListener('click', function() {
+                if (previewDiv.style.display === 'none') {
+                    showPreview();
+                    this.textContent = '隱藏預覽';
+                } else {
+                    previewDiv.style.display = 'none';
+                    this.textContent = '顯示預覽';
+                }
             });
 
-            const [showPreview, setShowPreview] = useState(false);
+            function showPreview() {
+                const formData = new FormData(form);
+                let previewHTML = '<h2>預覽</h2>';
 
-            const handleChange = (e) => {
-                const { name, value } = e.target;
-                setFormData(prevData => ({
-                    ...prevData,
-                    [name]: value
-                }));
-            };
+                previewHTML += createPreviewSection('一、公司名稱', formData.get('companyName'));
+                previewHTML += createPreviewSection('二、公司使命', formData.get('mission'));
+                previewHTML += createPreviewSection('三、產品/服務描述', formData.get('productDescription'));
+                previewHTML += createPreviewSection('四、目標市場', formData.get('targetMarket'));
+                previewHTML += createPreviewSection('五、競爭優勢', formData.get('competitiveAdvantage'));
 
-            const PreviewSection = ({ title, content }) => (
-                <div className="preview-section">
-                    <div className="preview-title">{title}</div>
-                    <div className="preview-content">{content}</div>
-                </div>
-            );
+                previewHTML += '<div class="preview-section"><div class="preview-title">六、財務預測</div><div class="preview-content">';
+                previewHTML += '<h3>初始投資與成本</h3>';
+                previewHTML += `<p>初始投資總額：${formData.get('initialInvestment')}</p>`;
+                previewHTML += `<p>月固定成本：${formData.get('monthlyFixedCosts')}</p>`;
+                previewHTML += `<p>月變動成本：${formData.get('monthlyVariableCosts')}</p>`;
 
-            return (
-                <div className="container">
-                    <h1>創業計劃書模擬器</h1>
-                    <form>
-                        {/* 保留原有的表單欄位 */}
-                        {/* ... */}
-                        
-                        <div className="financial-section">
-                            <h2>六、財務預測</h2>
-                            
-                            <div className="financial-subsection">
-                                <h3>初始投資與成本</h3>
-                                <div className="financial-grid">
-                                    <input
-                                        type="number"
-                                        name="initialInvestment"
-                                        value={formData.initialInvestment}
-                                        onChange={handleChange}
-                                        placeholder="初始投資總額"
-                                        required
-                                    />
-                                    <input
-                                        type="number"
-                                        name="monthlyFixedCosts"
-                                        value={formData.monthlyFixedCosts}
-                                        onChange={handleChange}
-                                        placeholder="月固定成本"
-                                        required
-                                    />
-                                    <input
-                                        type="number"
-                                        name="monthlyVariableCosts"
-                                        value={formData.monthlyVariableCosts}
-                                        onChange={handleChange}
-                                        placeholder="月變動成本"
-                                        required
-                                    />
-                                </div>
-                                <div className="financial-note">
-                                    請仔細評估所有可能的成本，包括租金、薪資、原材料等。
-                                </div>
-                            </div>
+                previewHTML += '<h3>收入預測</h3>';
+                previewHTML += `<p>預期單價：${formData.get('expectedUnitPrice')}</p>`;
+                previewHTML += `<p>預期月銷量：${formData.get('expectedMonthlySales')}</p>`;
+                previewHTML += `<p>預計年收入：${formData.get('projectedAnnualRevenue')}</p>`;
 
-                            <div className="financial-subsection">
-                                <h3>收入預測</h3>
-                                <div className="financial-grid">
-                                    <input
-                                        type="number"
-                                        name="expectedUnitPrice"
-                                        value={formData.expectedUnitPrice}
-                                        onChange={handleChange}
-                                        placeholder="預期單價"
-                                        required
-                                    />
-                                    <input
-                                        type="number"
-                                        name="expectedMonthlySales"
-                                        value={formData.expectedMonthlySales}
-                                        onChange={handleChange}
-                                        placeholder="預期月銷量"
-                                        required
-                                    />
-                                    <input
-                                        type="number"
-                                        name="projectedAnnualRevenue"
-                                        value={formData.projectedAnnualRevenue}
-                                        onChange={handleChange}
-                                        placeholder="預計年收入"
-                                        required
-                                    />
-                                </div>
-                                <div className="financial-note">
-                                    基於市場研究和競爭分析來估算這些數字。考慮季節性因素和市場趨勢。
-                                </div>
-                            </div>
+                previewHTML += '<h3>盈利能力分析</h3>';
+                previewHTML += `<p>損益平衡點：${formData.get('breakevenPoint')} 單位</p>`;
+                previewHTML += `<p>預計年利潤：${formData.get('projectedAnnualProfit')}</p>`;
+                previewHTML += `<p>預期回收期：${formData.get('paybackPeriod')} 月</p>`;
+                previewHTML += `<p>投資回報率：${formData.get('returnOnInvestment')}%</p>`;
 
-                            <div className="financial-subsection">
-                                <h3>盈利能力分析</h3>
-                                <div className="financial-grid">
-                                    <input
-                                        type="number"
-                                        name="breakevenPoint"
-                                        value={formData.breakevenPoint}
-                                        onChange={handleChange}
-                                        placeholder="損益平衡點（單位）"
-                                        required
-                                    />
-                                    <input
-                                        type="number"
-                                        name="projectedAnnualProfit"
-                                        value={formData.projectedAnnualProfit}
-                                        onChange={handleChange}
-                                        placeholder="預計年利潤"
-                                        required
-                                    />
-                                    <input
-                                        type="number"
-                                        name="paybackPeriod"
-                                        value={formData.paybackPeriod}
-                                        onChange={handleChange}
-                                        placeholder="預期回收期（月）"
-                                        required
-                                    />
-                                    <input
-                                        type="number"
-                                        name="returnOnInvestment"
-                                        value={formData.returnOnInvestment}
-                                        onChange={handleChange}
-                                        placeholder="投資回報率（%）"
-                                        required
-                                    />
-                                </div>
-                                <div className="financial-note">
-                                    計算這些指標以評估您的業務在財務上的可行性。
-                                </div>
-                            </div>
+                previewHTML += '<h3>資金需求與現金流</h3>';
+                previewHTML += `<p>資金需求：${formData.get('fundingNeeds')}</p>`;
+                previewHTML += `<p>現金流預測：${formData.get('cashFlowProjection')}</p>`;
 
-                            <div className="financial-subsection">
-                                <h3>資金需求與現金流</h3>
-                                <div className="financial-grid">
-                                    <input
-                                        type="number"
-                                        name="fundingNeeds"
-                                        value={formData.fundingNeeds}
-                                        onChange={handleChange}
-                                        placeholder="資金需求"
-                                        required
-                                    />
-                                    <textarea
-                                        name="cashFlowProjection"
-                                        value={formData.cashFlowProjection}
-                                        onChange={handleChange}
-                                        placeholder="現金流預測（概述首年每月現金流）"
-                                        required
-                                    />
-                                </div>
-                                <div className="financial-note">
-                                    詳細規劃您的資金來源和使用，以及預期的現金流入和流出。
-                                </div>
-                            </div>
+                previewHTML += '<h3>風險評估</h3>';
+                previewHTML += `<p>${formData.get('riskAssessment')}</p>`;
+                previewHTML += '</div></div>';
 
-                            <div className="financial-subsection">
-                                <h3>風險評估</h3>
-                                <textarea
-                                    name="riskAssessment"
-                                    value={formData.riskAssessment}
-                                    onChange={handleChange}
-                                    placeholder="列出潛在的財務風險和緩解策略"
-                                    required
-                                />
-                                <div className="financial-note">
-                                    識別可能影響財務表現的風險，並提出相應的應對策略。
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button type="button" onClick={() => setShowPreview(!showPreview)}>
-                            {showPreview ? '隱藏預覽' : '顯示預覽'}
-                        </button>
-                    </form>
+                previewDiv.innerHTML = previewHTML;
+                previewDiv.style.display = 'block';
+            }
 
-                    {showPreview && (
-                        <div id="preview" className="fade-in">
-                            <h2>預覽</h2>
-                            {/* 保留原有的預覽部分 */}
-                            {/* ... */}
-                            <PreviewSection 
-                                title="六、財務預測" 
-                                content={
-                                    <>
-                                        <h3>初始投資與成本</h3>
-                                        <p>初始投資總額：{formData.initialInvestment}</p>
-                                        <p>月固定成本：{formData.monthlyFixedCosts}</p>
-                                        <p>月變動成本：{formData.monthlyVariableCosts}</p>
-
-                                        <h3>收入預測</h3>
-                                        <p>預期單價：{formData.expectedUnitPrice}</p>
-                                        <p>預期月銷量：{formData.expectedMonthlySales}</p>
-                                        <p>預計年收入：{formData.projectedAnnualRevenue}</p>
-
-                                        <h3>盈利能力分析</h3>
-                                        <p>損益平衡點：{formData.breakevenPoint} 單位</p>
-                                        <p>預計年利潤：{formData.projectedAnnualProfit}</p>
-                                        <p>預期回收期：{formData.paybackPeriod} 月</p>
-                                        <p>投資回報率：{formData.returnOnInvestment}%</p>
-
-                                        <h3>資金需求與現金流</h3>
-                                        <p>資金需求：{formData.fundingNeeds}</p>
-                                        <p>現金流預測：{formData.cashFlowProjection}</p>
-
-                                        <h3>風險評估</h3>
-                                        <p>{formData.riskAssessment}</p>
-                                    </>
-                                } 
-                            />
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        ReactDOM.render(React.createElement(StartupPlanForm), document.getElementById('root'));
+            function createPreviewSection(title, content) {
+                return `
+                    <div class="preview-section">
+                        <div class="preview-title">${title}</div>
+                        <div class="preview-content">${content}</div>
+                    </div>
+                `;
+            }
+        });
     </script>
 </body>
 </html>
