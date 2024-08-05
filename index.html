@@ -66,6 +66,160 @@
 </head>
 <body>
     <div id="root"></div>
-    <script src="app.js"></script>
+
+    <script type="text/javascript">
+        const { useState } = React;
+
+        function StartupPlanForm() {
+            const [formData, setFormData] = useState({
+                companyName: '',
+                mission: '',
+                productDescription: '',
+                targetMarket: '',
+                competitiveAdvantage: '',
+                financialProjections: '',
+            });
+
+            const [showPreview, setShowPreview] = useState(false);
+
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prevData => ({
+                    ...prevData,
+                    [name]: value
+                }));
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                console.log('創業計畫書內容:', formData);
+                alert('計畫書已保存！');
+            };
+
+            const generatePDF = async () => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                const Unicode = await window.UnicodeModule;
+                await Unicode(doc);
+
+                doc.setFont('NotoSansTC', 'normal');
+                
+                doc.setFontSize(18);
+                doc.text('創業計畫書', 105, 20, { align: 'center' });
+                
+                doc.setFontSize(12);
+                const sections = [
+                    { title: '一、公司名稱', content: formData.companyName },
+                    { title: '二、公司使命', content: formData.mission },
+                    { title: '三、產品/服務描述', content: formData.productDescription },
+                    { title: '四、目標市場', content: formData.targetMarket },
+                    { title: '五、競爭優勢', content: formData.competitiveAdvantage },
+                    { title: '六、財務預測', content: formData.financialProjections }
+                ];
+
+                let yPosition = 40;
+                sections.forEach(section => {
+                    doc.setFontSize(12);
+                    doc.text(section.title, 20, yPosition);
+                    yPosition += 10;
+                    
+                    doc.setFontSize(10);
+                    const contentLines = doc.splitTextToSize(section.content, 170);
+                    doc.text(contentLines, 20, yPosition);
+                    yPosition += contentLines.length * 7 + 10;
+
+                    if (yPosition > 280) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                });
+                
+                doc.save('startup_plan.pdf');
+            };
+
+            return React.createElement(
+                'div',
+                { className: 'container' },
+                React.createElement('h1', null, '創業計畫書生成器'),
+                React.createElement(
+                    'form',
+                    { onSubmit: handleSubmit },
+                    React.createElement('label', { htmlFor: 'companyName' }, '一、公司名稱：'),
+                    React.createElement('input', {
+                        type: 'text',
+                        id: 'companyName',
+                        name: 'companyName',
+                        value: formData.companyName,
+                        onChange: handleChange,
+                        required: true
+                    }),
+                    React.createElement('label', { htmlFor: 'mission' }, '二、公司使命：'),
+                    React.createElement('textarea', {
+                        id: 'mission',
+                        name: 'mission',
+                        value: formData.mission,
+                        onChange: handleChange,
+                        required: true
+                    }),
+                    React.createElement('label', { htmlFor: 'productDescription' }, '三、產品/服務描述：'),
+                    React.createElement('textarea', {
+                        id: 'productDescription',
+                        name: 'productDescription',
+                        value: formData.productDescription,
+                        onChange: handleChange,
+                        required: true
+                    }),
+                    React.createElement('label', { htmlFor: 'targetMarket' }, '四、目標市場：'),
+                    React.createElement('textarea', {
+                        id: 'targetMarket',
+                        name: 'targetMarket',
+                        value: formData.targetMarket,
+                        onChange: handleChange,
+                        required: true
+                    }),
+                    React.createElement('label', { htmlFor: 'competitiveAdvantage' }, '五、競爭優勢：'),
+                    React.createElement('textarea', {
+                        id: 'competitiveAdvantage',
+                        name: 'competitiveAdvantage',
+                        value: formData.competitiveAdvantage,
+                        onChange: handleChange,
+                        required: true
+                    }),
+                    React.createElement('label', { htmlFor: 'financialProjections' }, '六、財務預測：'),
+                    React.createElement('textarea', {
+                        id: 'financialProjections',
+                        name: 'financialProjections',
+                        value: formData.financialProjections,
+                        onChange: handleChange,
+                        required: true
+                    }),
+                    React.createElement('button', { type: 'submit' }, '保存計畫書'),
+                    React.createElement(
+                        'button',
+                        {
+                            type: 'button',
+                            onClick: () => setShowPreview(!showPreview)
+                        },
+                        showPreview ? '隱藏預覽' : '顯示預覽'
+                    ),
+                    React.createElement('button', { type: 'button', onClick: generatePDF }, '匯出 PDF')
+                ),
+                showPreview && React.createElement(
+                    'div',
+                    { id: 'preview' },
+                    React.createElement('h2', null, '預覽'),
+                    React.createElement('h3', null, '一、公司名稱：', formData.companyName),
+                    React.createElement('p', null, React.createElement('strong', null, '二、公司使命：'), ' ', formData.mission),
+                    React.createElement('p', null, React.createElement('strong', null, '三、產品/服務描述：'), ' ', formData.productDescription),
+                    React.createElement('p', null, React.createElement('strong', null, '四、目標市場：'), ' ', formData.targetMarket),
+                    React.createElement('p', null, React.createElement('strong', null, '五、競爭優勢：'), ' ', formData.competitiveAdvantage),
+                    React.createElement('p', null, React.createElement('strong', null, '六、財務預測：'), ' ', formData.financialProjections)
+                )
+            );
+        }
+
+        ReactDOM.render(React.createElement(StartupPlanForm), document.getElementById('root'));
+    </script>
 </body>
 </html>
