@@ -36,12 +36,13 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
+        h1, h2 {
             color: var(--secondary-color);
             text-align: center;
-            font-size: 2.2em;
-            margin-bottom: 30px;
         }
+
+        h1 { font-size: 2.2em; margin-bottom: 30px; }
+        h2 { font-size: 1.8em; margin-bottom: 20px; }
 
         form {
             display: flex;
@@ -145,9 +146,8 @@
             .financial-grid {
                 grid-template-columns: 1fr;
             }
-            h1 {
-                font-size: 1.8em;
-            }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.6em; }
         }
     </style>
 </head>
@@ -181,38 +181,48 @@
                 }));
             };
 
+            const generateODTContent = () => {
+                return `
+<office:document-content>
+    <office:body>
+        <office:text>
+            <text:h text:style-name="Heading_20_1" text:outline-level="1">創業計劃書</text:h>
+            
+            <text:h text:style-name="Heading_20_2" text:outline-level="2">一、公司名稱</text:h>
+            <text:p>${formData.companyName}</text:p>
+            
+            <text:h text:style-name="Heading_20_2" text:outline-level="2">二、公司使命</text:h>
+            <text:p>${formData.mission}</text:p>
+            
+            <text:h text:style-name="Heading_20_2" text:outline-level="2">三、產品/服務描述</text:h>
+            <text:p>${formData.productDescription}</text:p>
+            
+            <text:h text:style-name="Heading_20_2" text:outline-level="2">四、目標市場</text:h>
+            <text:p>${formData.targetMarket}</text:p>
+            
+            <text:h text:style-name="Heading_20_2" text:outline-level="2">五、競爭優勢</text:h>
+            <text:p>${formData.competitiveAdvantage}</text:p>
+            
+            <text:h text:style-name="Heading_20_2" text:outline-level="2">六、財務預測</text:h>
+            <text:p>初始投資：${formData.initialInvestment}</text:p>
+            <text:p>預計收入：${formData.projectedRevenue}</text:p>
+            <text:p>營運成本：${formData.operatingCosts}</text:p>
+            <text:p>損益平衡點：${formData.breakEvenPoint}</text:p>
+            <text:p>資金需求：${formData.fundingNeeds}</text:p>
+        </office:text>
+    </office:body>
+</office:document-content>
+                `;
+            };
+
             const handleSubmit = (e) => {
                 e.preventDefault();
-                const content = `
-創業計劃書
-
-一、公司名稱：${formData.companyName}
-
-二、公司使命：
-${formData.mission}
-
-三、產品/服務描述：
-${formData.productDescription}
-
-四、目標市場：
-${formData.targetMarket}
-
-五、競爭優勢：
-${formData.competitiveAdvantage}
-
-六、財務預測：
-- 初始投資：${formData.initialInvestment}
-- 預計收入：${formData.projectedRevenue}
-- 營運成本：${formData.operatingCosts}
-- 損益平衡點：${formData.breakEvenPoint}
-- 資金需求：${formData.fundingNeeds}
-                `;
-
-                const blob = new Blob([content], { type: 'text/plain' });
+                const content = generateODTContent();
+                const blob = new Blob([content], { type: 'application/vnd.oasis.opendocument.text' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = '創業計劃書.txt';
+                a.download = '創業計劃書.odt';
                 a.click();
                 URL.revokeObjectURL(url);
             };
@@ -325,7 +335,7 @@ ${formData.competitiveAdvantage}
                             </div>
                         </div>
                         
-                        <button type="submit">產生並下載計劃書</button>
+                        <button type="submit">產生並下載計劃書 (ODT格式)</button>
                         <button type="button" onClick={() => setShowPreview(!showPreview)}>
                             {showPreview ? '隱藏預覽' : '顯示預覽'}
                         </button>
