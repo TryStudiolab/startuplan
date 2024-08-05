@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>創業計畫書生成器</title>
+    <title>創業計劃書模擬器</title>
     <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
     <style>
@@ -40,7 +40,7 @@
             font-weight: bold;
             color: #34495e;
         }
-        input, textarea {
+        input, textarea, select {
             margin-bottom: 15px;
             padding: 12px;
             border: 1px solid #bdc3c7;
@@ -48,7 +48,7 @@
             font-size: 16px;
             transition: border-color 0.3s ease;
         }
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: #3498db;
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
@@ -94,6 +94,23 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        .financial-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .financial-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -109,7 +126,11 @@
                 productDescription: '',
                 targetMarket: '',
                 competitiveAdvantage: '',
-                financialProjections: '',
+                initialInvestment: '',
+                projectedRevenue: '',
+                operatingCosts: '',
+                breakEvenPoint: '',
+                fundingNeeds: '',
             });
 
             const [showPreview, setShowPreview] = useState(false);
@@ -124,14 +145,44 @@
 
             const handleSubmit = (e) => {
                 e.preventDefault();
-                console.log('創業計畫書內容:', formData);
-                alert('計畫書已保存！');
+                const content = `
+創業計劃書
+
+一、公司名稱：${formData.companyName}
+
+二、公司使命：
+${formData.mission}
+
+三、產品/服務描述：
+${formData.productDescription}
+
+四、目標市場：
+${formData.targetMarket}
+
+五、競爭優勢：
+${formData.competitiveAdvantage}
+
+六、財務預測：
+- 初始投資：${formData.initialInvestment}
+- 預計收入：${formData.projectedRevenue}
+- 營運成本：${formData.operatingCosts}
+- 損益平衡點：${formData.breakEvenPoint}
+- 資金需求：${formData.fundingNeeds}
+                `;
+
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '創業計劃書.txt';
+                a.click();
+                URL.revokeObjectURL(url);
             };
 
             return React.createElement(
                 'div',
                 { className: 'container' },
-                React.createElement('h1', null, '創業計畫書生成器'),
+                React.createElement('h1', null, '創業計劃書模擬器'),
                 React.createElement(
                     'form',
                     { onSubmit: handleSubmit },
@@ -181,16 +232,52 @@
                         placeholder: '描述您的競爭優勢',
                         required: true
                     }),
-                    React.createElement('label', { htmlFor: 'financialProjections' }, '六、財務預測'),
-                    React.createElement('textarea', {
-                        id: 'financialProjections',
-                        name: 'financialProjections',
-                        value: formData.financialProjections,
-                        onChange: handleChange,
-                        placeholder: '描述您的財務預測',
-                        required: true
-                    }),
-                    React.createElement('button', { type: 'submit' }, '保存計畫書'),
+                    React.createElement('label', null, '六、財務預測'),
+                    React.createElement(
+                        'div',
+                        { className: 'financial-inputs' },
+                        React.createElement('input', {
+                            type: 'text',
+                            name: 'initialInvestment',
+                            value: formData.initialInvestment,
+                            onChange: handleChange,
+                            placeholder: '初始投資',
+                            required: true
+                        }),
+                        React.createElement('input', {
+                            type: 'text',
+                            name: 'projectedRevenue',
+                            value: formData.projectedRevenue,
+                            onChange: handleChange,
+                            placeholder: '預計收入',
+                            required: true
+                        }),
+                        React.createElement('input', {
+                            type: 'text',
+                            name: 'operatingCosts',
+                            value: formData.operatingCosts,
+                            onChange: handleChange,
+                            placeholder: '營運成本',
+                            required: true
+                        }),
+                        React.createElement('input', {
+                            type: 'text',
+                            name: 'breakEvenPoint',
+                            value: formData.breakEvenPoint,
+                            onChange: handleChange,
+                            placeholder: '損益平衡點',
+                            required: true
+                        }),
+                        React.createElement('input', {
+                            type: 'text',
+                            name: 'fundingNeeds',
+                            value: formData.fundingNeeds,
+                            onChange: handleChange,
+                            placeholder: '資金需求',
+                            required: true
+                        })
+                    ),
+                    React.createElement('button', { type: 'submit' }, '產生並下載計劃書'),
                     React.createElement(
                         'button',
                         {
@@ -209,7 +296,12 @@
                     React.createElement('p', null, React.createElement('strong', null, '三、產品/服務描述：'), ' ', formData.productDescription),
                     React.createElement('p', null, React.createElement('strong', null, '四、目標市場：'), ' ', formData.targetMarket),
                     React.createElement('p', null, React.createElement('strong', null, '五、競爭優勢：'), ' ', formData.competitiveAdvantage),
-                    React.createElement('p', null, React.createElement('strong', null, '六、財務預測：'), ' ', formData.financialProjections)
+                    React.createElement('p', null, React.createElement('strong', null, '六、財務預測：')),
+                    React.createElement('p', null, '初始投資：', formData.initialInvestment),
+                    React.createElement('p', null, '預計收入：', formData.projectedRevenue),
+                    React.createElement('p', null, '營運成本：', formData.operatingCosts),
+                    React.createElement('p', null, '損益平衡點：', formData.breakEvenPoint),
+                    React.createElement('p', null, '資金需求：', formData.fundingNeeds)
                 )
             );
         }
