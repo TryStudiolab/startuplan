@@ -9,57 +9,74 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
 
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --background-color: #f0f4f8;
+            --text-color: #333;
+            --border-color: #bdc3c7;
+            --hover-color: #2980b9;
+        }
+
         body {
             font-family: 'Noto Sans TC', sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #f0f4f8;
-            color: #333;
+            background-color: var(--background-color);
+            color: var(--text-color);
         }
+
         .container {
             max-width: 800px;
             margin: 40px auto;
             background: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        h1, h2 {
-            color: #2c3e50;
+
+        h1 {
+            color: var(--secondary-color);
             text-align: center;
+            font-size: 2.2em;
             margin-bottom: 30px;
         }
-        h1 { font-size: 2.5em; }
-        h2 { font-size: 2em; }
+
         form {
             display: flex;
             flex-direction: column;
         }
+
         label {
             margin-top: 20px;
             font-weight: bold;
-            color: #34495e;
+            color: var(--secondary-color);
+            font-size: 1.1em;
         }
+
         input, textarea {
             margin-bottom: 15px;
             padding: 12px;
-            border: 1px solid #bdc3c7;
+            border: 1px solid var(--border-color);
             border-radius: 5px;
             font-size: 16px;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
         }
+
         input:focus, textarea:focus {
             outline: none;
-            border-color: #3498db;
+            border-color: var(--primary-color);
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
         }
+
         textarea {
             height: 120px;
             resize: vertical;
         }
+
         button {
-            background-color: #3498db;
+            background-color: var(--primary-color);
             color: white;
             padding: 12px 20px;
             border: none;
@@ -69,41 +86,67 @@
             font-size: 16px;
             transition: background-color 0.3s ease;
         }
+
         button:hover {
-            background-color: #2980b9;
+            background-color: var(--hover-color);
         }
+
         #preview {
             margin-top: 40px;
-            border-top: 2px solid #ecf0f1;
+            border-top: 2px solid var(--border-color);
             padding-top: 30px;
         }
+
         .fade-in {
             animation: fadeIn 0.5s ease-in;
         }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
         .financial-section {
             background-color: #ecf0f1;
             padding: 20px;
             border-radius: 5px;
             margin-top: 20px;
         }
+
         .financial-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
         }
+
+        .preview-section {
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .preview-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .preview-content {
+            margin-left: 20px;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 20px;
                 padding: 20px;
             }
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.8em; }
             .financial-grid {
                 grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 1.8em;
             }
         }
     </style>
@@ -174,134 +217,143 @@ ${formData.competitiveAdvantage}
                 URL.revokeObjectURL(url);
             };
 
-            return React.createElement(
-                'div',
-                { className: 'container' },
-                React.createElement('h1', null, '創業計劃書模擬器'),
-                React.createElement(
-                    'form',
-                    { onSubmit: handleSubmit },
-                    React.createElement('label', { htmlFor: 'companyName' }, '一、公司名稱'),
-                    React.createElement('input', {
-                        type: 'text',
-                        id: 'companyName',
-                        name: 'companyName',
-                        value: formData.companyName,
-                        onChange: handleChange,
-                        placeholder: '輸入您的公司名稱',
-                        required: true
-                    }),
-                    React.createElement('label', { htmlFor: 'mission' }, '二、公司使命'),
-                    React.createElement('textarea', {
-                        id: 'mission',
-                        name: 'mission',
-                        value: formData.mission,
-                        onChange: handleChange,
-                        placeholder: '描述您公司的使命',
-                        required: true
-                    }),
-                    React.createElement('label', { htmlFor: 'productDescription' }, '三、產品/服務描述'),
-                    React.createElement('textarea', {
-                        id: 'productDescription',
-                        name: 'productDescription',
-                        value: formData.productDescription,
-                        onChange: handleChange,
-                        placeholder: '描述您的產品或服務',
-                        required: true
-                    }),
-                    React.createElement('label', { htmlFor: 'targetMarket' }, '四、目標市場'),
-                    React.createElement('textarea', {
-                        id: 'targetMarket',
-                        name: 'targetMarket',
-                        value: formData.targetMarket,
-                        onChange: handleChange,
-                        placeholder: '描述您的目標市場',
-                        required: true
-                    }),
-                    React.createElement('label', { htmlFor: 'competitiveAdvantage' }, '五、競爭優勢'),
-                    React.createElement('textarea', {
-                        id: 'competitiveAdvantage',
-                        name: 'competitiveAdvantage',
-                        value: formData.competitiveAdvantage,
-                        onChange: handleChange,
-                        placeholder: '描述您的競爭優勢',
-                        required: true
-                    }),
-                    React.createElement(
-                        'div',
-                        { className: 'financial-section' },
-                        React.createElement('h2', null, '六、財務預測'),
-                        React.createElement(
-                            'div',
-                            { className: 'financial-grid' },
-                            React.createElement('input', {
-                                type: 'text',
-                                name: 'initialInvestment',
-                                value: formData.initialInvestment,
-                                onChange: handleChange,
-                                placeholder: '初始投資',
-                                required: true
-                            }),
-                            React.createElement('input', {
-                                type: 'text',
-                                name: 'projectedRevenue',
-                                value: formData.projectedRevenue,
-                                onChange: handleChange,
-                                placeholder: '預計收入',
-                                required: true
-                            }),
-                            React.createElement('input', {
-                                type: 'text',
-                                name: 'operatingCosts',
-                                value: formData.operatingCosts,
-                                onChange: handleChange,
-                                placeholder: '營運成本',
-                                required: true
-                            }),
-                            React.createElement('input', {
-                                type: 'text',
-                                name: 'breakEvenPoint',
-                                value: formData.breakEvenPoint,
-                                onChange: handleChange,
-                                placeholder: '損益平衡點',
-                                required: true
-                            }),
-                            React.createElement('input', {
-                                type: 'text',
-                                name: 'fundingNeeds',
-                                value: formData.fundingNeeds,
-                                onChange: handleChange,
-                                placeholder: '資金需求',
-                                required: true
-                            })
-                        )
-                    ),
-                    React.createElement('button', { type: 'submit' }, '產生並下載計劃書'),
-                    React.createElement(
-                        'button',
-                        {
-                            type: 'button',
-                            onClick: () => setShowPreview(!showPreview)
-                        },
-                        showPreview ? '隱藏預覽' : '顯示預覽'
-                    )
-                ),
-                showPreview && React.createElement(
-                    'div',
-                    { id: 'preview', className: 'fade-in' },
-                    React.createElement('h2', null, '預覽'),
-                    React.createElement('h3', null, '一、公司名稱：', formData.companyName),
-                    React.createElement('p', null, React.createElement('strong', null, '二、公司使命：'), ' ', formData.mission),
-                    React.createElement('p', null, React.createElement('strong', null, '三、產品/服務描述：'), ' ', formData.productDescription),
-                    React.createElement('p', null, React.createElement('strong', null, '四、目標市場：'), ' ', formData.targetMarket),
-                    React.createElement('p', null, React.createElement('strong', null, '五、競爭優勢：'), ' ', formData.competitiveAdvantage),
-                    React.createElement('h3', null, '六、財務預測：'),
-                    React.createElement('p', null, '初始投資：', formData.initialInvestment),
-                    React.createElement('p', null, '預計收入：', formData.projectedRevenue),
-                    React.createElement('p', null, '營運成本：', formData.operatingCosts),
-                    React.createElement('p', null, '損益平衡點：', formData.breakEvenPoint),
-                    React.createElement('p', null, '資金需求：', formData.fundingNeeds)
-                )
+            const PreviewSection = ({ title, content }) => (
+                <div className="preview-section">
+                    <div className="preview-title">{title}</div>
+                    <div className="preview-content">{content}</div>
+                </div>
+            );
+
+            return (
+                <div className="container">
+                    <h1>創業計劃書模擬器</h1>
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="companyName">一、公司名稱</label>
+                        <input
+                            type="text"
+                            id="companyName"
+                            name="companyName"
+                            value={formData.companyName}
+                            onChange={handleChange}
+                            placeholder="輸入您的公司名稱"
+                            required
+                        />
+                        
+                        <label htmlFor="mission">二、公司使命</label>
+                        <textarea
+                            id="mission"
+                            name="mission"
+                            value={formData.mission}
+                            onChange={handleChange}
+                            placeholder="描述您公司的使命"
+                            required
+                        />
+                        
+                        <label htmlFor="productDescription">三、產品/服務描述</label>
+                        <textarea
+                            id="productDescription"
+                            name="productDescription"
+                            value={formData.productDescription}
+                            onChange={handleChange}
+                            placeholder="描述您的產品或服務"
+                            required
+                        />
+                        
+                        <label htmlFor="targetMarket">四、目標市場</label>
+                        <textarea
+                            id="targetMarket"
+                            name="targetMarket"
+                            value={formData.targetMarket}
+                            onChange={handleChange}
+                            placeholder="描述您的目標市場"
+                            required
+                        />
+                        
+                        <label htmlFor="competitiveAdvantage">五、競爭優勢</label>
+                        <textarea
+                            id="competitiveAdvantage"
+                            name="competitiveAdvantage"
+                            value={formData.competitiveAdvantage}
+                            onChange={handleChange}
+                            placeholder="描述您的競爭優勢"
+                            required
+                        />
+                        
+                        <div className="financial-section">
+                            <h2>六、財務預測</h2>
+                            <div className="financial-grid">
+                                <input
+                                    type="text"
+                                    name="initialInvestment"
+                                    value={formData.initialInvestment}
+                                    onChange={handleChange}
+                                    placeholder="初始投資"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="projectedRevenue"
+                                    value={formData.projectedRevenue}
+                                    onChange={handleChange}
+                                    placeholder="預計收入"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="operatingCosts"
+                                    value={formData.operatingCosts}
+                                    onChange={handleChange}
+                                    placeholder="營運成本"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="breakEvenPoint"
+                                    value={formData.breakEvenPoint}
+                                    onChange={handleChange}
+                                    placeholder="損益平衡點"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="fundingNeeds"
+                                    value={formData.fundingNeeds}
+                                    onChange={handleChange}
+                                    placeholder="資金需求"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        
+                        <button type="submit">產生並下載計劃書</button>
+                        <button type="button" onClick={() => setShowPreview(!showPreview)}>
+                            {showPreview ? '隱藏預覽' : '顯示預覽'}
+                        </button>
+                    </form>
+
+                    {showPreview && (
+                        <div id="preview" className="fade-in">
+                            <h2>預覽</h2>
+                            <PreviewSection title="一、公司名稱" content={formData.companyName} />
+                            <PreviewSection title="二、公司使命" content={formData.mission} />
+                            <PreviewSection title="三、產品/服務描述" content={formData.productDescription} />
+                            <PreviewSection title="四、目標市場" content={formData.targetMarket} />
+                            <PreviewSection title="五、競爭優勢" content={formData.competitiveAdvantage} />
+                            <PreviewSection 
+                                title="六、財務預測" 
+                                content={
+                                    <>
+                                        <p>初始投資：{formData.initialInvestment}</p>
+                                        <p>預計收入：{formData.projectedRevenue}</p>
+                                        <p>營運成本：{formData.operatingCosts}</p>
+                                        <p>損益平衡點：{formData.breakEvenPoint}</p>
+                                        <p>資金需求：{formData.fundingNeeds}</p>
+                                    </>
+                                } 
+                            />
+                        </div>
+                    )}
+                </div>
             );
         }
 
