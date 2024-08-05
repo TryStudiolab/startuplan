@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>創業計劃書模擬器</title>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
 
@@ -136,13 +138,6 @@
             margin-left: 20px;
         }
 
-        #copy-message {
-            color: green;
-            text-align: center;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
         @media (max-width: 768px) {
             .container {
                 margin: 20px;
@@ -157,137 +152,175 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>創業計劃書模擬器</h1>
-        <form id="startup-form">
-            <label for="companyName">一、公司名稱</label>
-            <input type="text" id="companyName" name="companyName" placeholder="輸入您的公司名稱" required>
-            
-            <label for="mission">二、公司使命</label>
-            <textarea id="mission" name="mission" placeholder="描述您公司的使命" required></textarea>
-            
-            <label for="productDescription">三、產品/服務描述</label>
-            <textarea id="productDescription" name="productDescription" placeholder="描述您的產品或服務" required></textarea>
-            
-            <label for="targetMarket">四、目標市場</label>
-            <textarea id="targetMarket" name="targetMarket" placeholder="描述您的目標市場" required></textarea>
-            
-            <label for="competitiveAdvantage">五、競爭優勢</label>
-            <textarea id="competitiveAdvantage" name="competitiveAdvantage" placeholder="描述您的競爭優勢" required></textarea>
-            
-            <div class="financial-section">
-                <h2>六、財務預測</h2>
-                <div class="financial-grid">
-                    <input type="text" name="initialInvestment" placeholder="初始投資" required>
-                    <input type="text" name="projectedRevenue" placeholder="預計收入" required>
-                    <input type="text" name="operatingCosts" placeholder="營運成本" required>
-                    <input type="text" name="breakEvenPoint" placeholder="損益平衡點" required>
-                    <input type="text" name="fundingNeeds" placeholder="資金需求" required>
-                </div>
-            </div>
-            
-            <button type="button" id="preview-btn">顯示預覽</button>
-            <button type="button" id="copy-btn" style="display: none;">複製結果</button>
-        </form>
+    <div id="root"></div>
 
-        <div id="copy-message"></div>
+    <script type="text/javascript">
+        const { useState } = React;
 
-        <div id="preview" style="display: none;"></div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('startup-form');
-            const previewBtn = document.getElementById('preview-btn');
-            const copyBtn = document.getElementById('copy-btn');
-            const previewDiv = document.getElementById('preview');
-            const copyMessage = document.getElementById('copy-message');
-
-            previewBtn.addEventListener('click', function() {
-                if (previewDiv.style.display === 'none') {
-                    showPreview();
-                    this.textContent = '隱藏預覽';
-                    copyBtn.style.display = 'block';
-                } else {
-                    previewDiv.style.display = 'none';
-                    this.textContent = '顯示預覽';
-                    copyBtn.style.display = 'none';
-                }
+        function StartupPlanForm() {
+            const [formData, setFormData] = useState({
+                companyName: '',
+                mission: '',
+                productDescription: '',
+                targetMarket: '',
+                competitiveAdvantage: '',
+                initialInvestment: '',
+                projectedRevenue: '',
+                operatingCosts: '',
+                breakEvenPoint: '',
+                fundingNeeds: ''
             });
 
-            copyBtn.addEventListener('click', copyContent);
+            const [showPreview, setShowPreview] = useState(false);
 
-            function showPreview() {
-                const formData = new FormData(form);
-                let previewHTML = '<h2>預覽</h2>';
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prevData => ({
+                    ...prevData,
+                    [name]: value
+                }));
+            };
 
-                for (let [name, value] of formData.entries()) {
-                    if (name === 'initialInvestment' || name === 'projectedRevenue' || name === 'operatingCosts' || name === 'breakEvenPoint' || name === 'fundingNeeds') {
-                        continue;
-                    }
-                    previewHTML += `
-                        <div class="preview-section">
-                            <div class="preview-title">${getTitle(name)}</div>
-                            <div class="preview-content">${value}</div>
+            const PreviewSection = ({ title, content }) => (
+                <div className="preview-section">
+                    <div className="preview-title">{title}</div>
+                    <div className="preview-content">{content}</div>
+                </div>
+            );
+
+            return (
+                <div className="container">
+                    <h1>創業計劃書模擬器</h1>
+                    <form>
+                        <label htmlFor="companyName">一、公司名稱</label>
+                        <input
+                            type="text"
+                            id="companyName"
+                            name="companyName"
+                            value={formData.companyName}
+                            onChange={handleChange}
+                            placeholder="輸入您的公司名稱"
+                            required
+                        />
+                        
+                        <label htmlFor="mission">二、公司使命</label>
+                        <textarea
+                            id="mission"
+                            name="mission"
+                            value={formData.mission}
+                            onChange={handleChange}
+                            placeholder="描述您公司的使命"
+                            required
+                        />
+                        
+                        <label htmlFor="productDescription">三、產品/服務描述</label>
+                        <textarea
+                            id="productDescription"
+                            name="productDescription"
+                            value={formData.productDescription}
+                            onChange={handleChange}
+                            placeholder="描述您的產品或服務"
+                            required
+                        />
+                        
+                        <label htmlFor="targetMarket">四、目標市場</label>
+                        <textarea
+                            id="targetMarket"
+                            name="targetMarket"
+                            value={formData.targetMarket}
+                            onChange={handleChange}
+                            placeholder="描述您的目標市場"
+                            required
+                        />
+                        
+                        <label htmlFor="competitiveAdvantage">五、競爭優勢</label>
+                        <textarea
+                            id="competitiveAdvantage"
+                            name="competitiveAdvantage"
+                            value={formData.competitiveAdvantage}
+                            onChange={handleChange}
+                            placeholder="描述您的競爭優勢"
+                            required
+                        />
+                        
+                        <div className="financial-section">
+                            <h2>六、財務預測</h2>
+                            <div className="financial-grid">
+                                <input
+                                    type="text"
+                                    name="initialInvestment"
+                                    value={formData.initialInvestment}
+                                    onChange={handleChange}
+                                    placeholder="初始投資"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="projectedRevenue"
+                                    value={formData.projectedRevenue}
+                                    onChange={handleChange}
+                                    placeholder="預計收入"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="operatingCosts"
+                                    value={formData.operatingCosts}
+                                    onChange={handleChange}
+                                    placeholder="營運成本"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="breakEvenPoint"
+                                    value={formData.breakEvenPoint}
+                                    onChange={handleChange}
+                                    placeholder="損益平衡點"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="fundingNeeds"
+                                    value={formData.fundingNeeds}
+                                    onChange={handleChange}
+                                    placeholder="資金需求"
+                                    required
+                                />
+                            </div>
                         </div>
-                    `;
-                }
+                        
+                        <button type="button" onClick={() => setShowPreview(!showPreview)}>
+                            {showPreview ? '隱藏預覽' : '顯示預覽'}
+                        </button>
+                    </form>
 
-                previewHTML += `
-                    <div class="preview-section">
-                        <div class="preview-title">六、財務預測</div>
-                        <div class="preview-content">
-                            <p>初始投資：${formData.get('initialInvestment')}</p>
-                            <p>預計收入：${formData.get('projectedRevenue')}</p>
-                            <p>營運成本：${formData.get('operatingCosts')}</p>
-                            <p>損益平衡點：${formData.get('breakEvenPoint')}</p>
-                            <p>資金需求：${formData.get('fundingNeeds')}</p>
+                    {showPreview && (
+                        <div id="preview" className="fade-in">
+                            <h2>預覽</h2>
+                            <PreviewSection title="一、公司名稱" content={formData.companyName} />
+                            <PreviewSection title="二、公司使命" content={formData.mission} />
+                            <PreviewSection title="三、產品/服務描述" content={formData.productDescription} />
+                            <PreviewSection title="四、目標市場" content={formData.targetMarket} />
+                            <PreviewSection title="五、競爭優勢" content={formData.competitiveAdvantage} />
+                            <PreviewSection 
+                                title="六、財務預測" 
+                                content={
+                                    <>
+                                        <p>初始投資：{formData.initialInvestment}</p>
+                                        <p>預計收入：{formData.projectedRevenue}</p>
+                                        <p>營運成本：{formData.operatingCosts}</p>
+                                        <p>損益平衡點：{formData.breakEvenPoint}</p>
+                                        <p>資金需求：{formData.fundingNeeds}</p>
+                                    </>
+                                } 
+                            />
                         </div>
-                    </div>
-                `;
+                    )}
+                </div>
+            );
+        }
 
-                previewDiv.innerHTML = previewHTML;
-                previewDiv.style.display = 'block';
-            }
-
-            function copyContent() {
-                const formData = new FormData(form);
-                let content = '創業計劃書\n\n';
-
-                for (let [name, value] of formData.entries()) {
-                    if (name === 'initialInvestment' || name === 'projectedRevenue' || name === 'operatingCosts' || name === 'breakEvenPoint' || name === 'fundingNeeds') {
-                        continue;
-                    }
-                    content += `${getTitle(name)}：\n${value}\n\n`;
-                }
-
-                content += '六、財務預測：\n';
-                content += `- 初始投資：${formData.get('initialInvestment')}\n`;
-                content += `- 預計收入：${formData.get('projectedRevenue')}\n`;
-                content += `- 營運成本：${formData.get('operatingCosts')}\n`;
-                content += `- 損益平衡點：${formData.get('breakEvenPoint')}\n`;
-                content += `- 資金需求：${formData.get('fundingNeeds')}\n`;
-
-                navigator.clipboard.writeText(content).then(() => {
-                    copyMessage.textContent = '內容已成功複製到剪貼簿！';
-                    setTimeout(() => copyMessage.textContent = '', 3000);
-                }, (err) => {
-                    console.error('無法複製文字: ', err);
-                    copyMessage.textContent = '複製失敗，請手動複製。';
-                });
-            }
-
-            function getTitle(name) {
-                const titles = {
-                    'companyName': '一、公司名稱',
-                    'mission': '二、公司使命',
-                    'productDescription': '三、產品/服務描述',
-                    'targetMarket': '四、目標市場',
-                    'competitiveAdvantage': '五、競爭優勢'
-                };
-                return titles[name] || name;
-            }
-        });
+        ReactDOM.render(React.createElement(StartupPlanForm), document.getElementById('root'));
     </script>
 </body>
 </html>
