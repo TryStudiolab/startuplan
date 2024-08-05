@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>創業計畫書生成器</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #preview {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        function StartupPlanForm() {
+            const [formData, setFormData] = useState({
+                companyName: '',
+                mission: '',
+                productDescription: '',
+                targetMarket: '',
+                competitiveAdvantage: '',
+                financialProjections: '',
+            });
+
+            const [showPreview, setShowPreview] = useState(false);
+
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prevData => ({
+                    ...prevData,
+                    [name]: value
+                }));
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                console.log('創業計畫書內容:', formData);
+                alert('計畫書已保存！');
+            };
+
+            const generatePDF = () => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                doc.setFontSize(18);
+                doc.text('創業計畫書', 105, 20, null, null, 'center');
+                
+                doc.setFontSize(12);
+                doc.text(`公司名稱: ${formData.companyName}`, 20, 40);
+                doc.text(`公司使命:`, 20, 50);
+                doc.setFontSize(10);
+                const missionLines = doc.splitTextToSize(formData.mission, 170);
+                doc.text(missionLines, 20, 60);
+                
+                // 添加其他字段...
+                
+                doc.save('startup_plan.pdf');
+            };
+
+            return (
+                <div className="container">
+                    <h1>創業計畫書生成器</h1>
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="companyName">公司名稱：</label>
+                        <input
+                            type="text"
+                            id="companyName"
+                            name="companyName"
+                            value={formData.companyName}
+                            onChange={handleChange}
+                            required
+                        />
+                        
+                        <label htmlFor="mission">公司使命：</label>
+                        <textarea
+                            id="mission"
+                            name="mission"
+                            value={formData.mission}
+                            onChange={handleChange}
+                            required
+                        />
+                        
+                        <label htmlFor="productDescription">產品/服務描述：</label>
+                        <textarea
+                            id="productDescription"
+                            name="productDescription"
+                            value={formData.productDescription}
+                            onChange={handleChange}
+                            required
+                        />
+                        
+                        <label htmlFor="targetMarket">目標市場：</label>
+                        <textarea
+                            id="targetMarket"
+                            name="targetMarket"
+                            value={formData.targetMarket}
+                            onChange={handleChange}
+                            required
+                        />
+                        
+                        <label htmlFor="competitiveAdvantage">競爭優勢：</label>
+                        <textarea
+                            id="competitiveAdvantage"
+                            name="competitiveAdvantage"
+                            value={formData.competitiveAdvantage}
+                            onChange={handleChange}
+                            required
+                        />
+                        
+                        <label htmlFor="financialProjections">財務預測：</label>
+                        <textarea
+                            id="financialProjections"
+                            name="financialProjections"
+                            value={formData.financialProjections}
+                            onChange={handleChange}
+                            required
+                        />
+                        
+                        <button type="submit">保存計畫書</button>
+                        <button type="button" onClick={() => setShowPreview(!showPreview)}>
+                            {showPreview ? '隱藏預覽' : '顯示預覽'}
+                        </button>
+                        <button type="button" onClick={generatePDF}>匯出 PDF</button>
+                    </form>
+
+                    {showPreview && (
+                        <div id="preview">
+                            <h2>預覽</h2>
+                            <h3>{formData.companyName}</h3>
+                            <p><strong>公司使命：</strong> {formData.mission}</p>
+                            <p><strong>產品/服務描述：</strong> {formData.productDescription}</p>
+                            <p><strong>目標市場：</strong> {formData.targetMarket}</p>
+                            <p><strong>競爭優勢：</strong> {formData.competitiveAdvantage}</p>
+                            <p><strong>財務預測：</strong> {formData.financialProjections}</p>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<StartupPlanForm />, document.getElementById('root'));
+    </script>
+</body>
+</html>
